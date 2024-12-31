@@ -71,7 +71,7 @@ class CameraManager:
                 sr_no = str(camera_list[i].getSerialNumber(camera_list[i]).decode('utf-8'))
                 print(sr_no)
                 if sr_no in self.camera_serials:
-                    self.cameras[sr_no]=DahuaCameras(camera_list[i].getSerialNumber(camera_list[i]),camera_list[i])
+                    self.cameras[sr_no]=DahuaCameras(str(camera_list[i].getSerialNumber(camera_list[i]).decode('utf-8')),camera_list[i])
 
     def initialize_camera(self, serial):
         """

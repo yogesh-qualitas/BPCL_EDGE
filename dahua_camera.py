@@ -3,6 +3,8 @@ import time
 from ImageConvert import *
 from MVSDK import *
 import numpy 
+import cv2
+import os
 
 class DahuaCameras:
     def __init__(self, id, pointer):
@@ -18,7 +20,7 @@ class DahuaCameras:
         self.camera_needs_Reset =False
         self.g_cameraStatusUserInfo = b"statusInfo"
     def onGetFrameEx(self,frame, userInfo):
-        print(frame)
+        
         start = time.time()
      
         nRet = frame.contents.valid(frame)
@@ -59,7 +61,9 @@ class DahuaCameras:
 
                 colorByteArray = bytearray(rgbBuff)
                 cvImage = numpy.array(colorByteArray).reshape(imageParams.height, imageParams.width, 3)
-
+            print(self.name)
+            os.makedirs(str(self.name), exist_ok=True)
+            cv2.imwrite(os.path.join(str(self.name),str(frame_)+".png"),cvImage)
             # # Encode cvImage to base64
             # encoded_image = image_to_base64(cvImage)
 
@@ -235,8 +239,8 @@ class DahuaCameras:
             trigModeEnumNode.contents.release(trigModeEnumNode) 
                 
         
-            userInfo = b"test"
-            nRet = streamSource.contents.attachGrabbingEx(streamSource, self.frameCallbackFuncEx, userInfo)    
+            
+            nRet = streamSource.contents.attachGrabbingEx(streamSource, self.frameCallbackFuncEx, self.name)    
             if ( nRet != 0 ):
                 print("attachGrabbingEx fail!")
                 # 释放相关资源
